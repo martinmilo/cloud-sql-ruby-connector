@@ -4,7 +4,7 @@
 # Basic PostgreSQL connection example using Cloud SQL Ruby Connector
 #
 # Prerequisites:
-#   - gem install cloudsql_ruby_connector pg
+#   - gem install cloud_sql_ruby_connector pg
 #   - Set GOOGLE_APPLICATION_CREDENTIALS or run `gcloud auth application-default login`
 #
 # Usage:
@@ -14,7 +14,7 @@
 #   DB_NAME=mydb \
 #   ruby basic.rb
 
-require "cloudsql_ruby_connector"
+require "cloud_sql_ruby_connector"
 require "pg"
 
 instance_connection_name = ENV.fetch("INSTANCE_CONNECTION_NAME")
@@ -23,7 +23,7 @@ db_pass = ENV.fetch("DB_PASS")
 db_name = ENV.fetch("DB_NAME")
 
 # Create a connector instance
-connector = CloudsqlRubyConnector::Connector.new(instance_connection_name)
+connector = CloudSQLRubyConnector::PostgreSQL::Connector.new(instance_connection_name)
 
 # Connect to the database
 conn = connector.connect(

@@ -7,7 +7,7 @@
 # instead of traditional username/password authentication.
 #
 # Prerequisites:
-#   - gem install cloudsql_ruby_connector pg
+#   - gem install cloud_sql_ruby_connector pg
 #   - Cloud SQL instance configured for IAM authentication
 #   - IAM database user created
 #   - Service account with Cloud SQL Client role
@@ -18,7 +18,7 @@
 #   DB_NAME=mydb \
 #   ruby iam_auth.rb
 
-require "cloudsql_ruby_connector"
+require "cloud_sql_ruby_connector"
 require "pg"
 
 instance_connection_name = ENV.fetch("INSTANCE_CONNECTION_NAME")
@@ -26,9 +26,9 @@ db_user = ENV.fetch("DB_USER")
 db_name = ENV.fetch("DB_NAME")
 
 # Create a connector with IAM authentication
-connector = CloudsqlRubyConnector::Connector.new(
+connector = CloudSQLRubyConnector::PostgreSQL::Connector.new(
   instance_connection_name,
-  auth_type: CloudsqlRubyConnector::AuthTypes::IAM
+  auth_type: :iam
 )
 
 # Connect - no password needed for IAM auth

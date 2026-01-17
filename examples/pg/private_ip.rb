@@ -8,7 +8,7 @@
 # Cloud SQL instance's private IP.
 #
 # Prerequisites:
-#   - gem install cloudsql_ruby_connector pg
+#   - gem install cloud_sql_ruby_connector pg
 #   - Application running in VPC with Cloud SQL private IP access
 #   - Set GOOGLE_APPLICATION_CREDENTIALS or run on GCE/Cloud Run
 #
@@ -19,7 +19,7 @@
 #   DB_NAME=mydb \
 #   ruby private_ip.rb
 
-require "cloudsql_ruby_connector"
+require "cloud_sql_ruby_connector"
 require "pg"
 
 instance_connection_name = ENV.fetch("INSTANCE_CONNECTION_NAME")
@@ -28,9 +28,9 @@ db_pass = ENV.fetch("DB_PASS")
 db_name = ENV.fetch("DB_NAME")
 
 # Create a connector using private IP
-connector = CloudsqlRubyConnector::Connector.new(
+connector = CloudSQLRubyConnector::PostgreSQL::Connector.new(
   instance_connection_name,
-  ip_type: CloudsqlRubyConnector::IpAddressTypes::PRIVATE
+  ip_type: :private
 )
 
 # Connect to the database

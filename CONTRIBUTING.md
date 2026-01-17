@@ -14,13 +14,19 @@ information on using pull requests.
 
 1. Fork and clone the repository
 2. Install dependencies: `bundle install`
-3. Run tests: `bundle exec rspec`
+3. Run tests: `bundle exec rake test`
 4. Run linter: `bundle exec rubocop`
 
 ## Running Tests
 
 ```sh
-bundle exec rspec
+bundle exec rake test
+```
+
+Or run both tests and linter:
+
+```sh
+bundle exec rake
 ```
 
 ## Code Style

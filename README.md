@@ -1,6 +1,6 @@
 # Cloud SQL Ruby Connector
 
-[![Gem Version](https://badge.fury.io/rb/cloudsql_ruby_connector.svg)](https://badge.fury.io/rb/cloudsql_ruby_connector)
+[![Gem Version](https://badge.fury.io/rb/cloud_sql_ruby_connector.svg)](https://badge.fury.io/rb/cloud_sql_ruby_connector)
 
 An unofficial Ruby connector for Google Cloud SQL that provides secure, IAM-based authentication without requiring the Cloud SQL Auth Proxy.
 
@@ -28,7 +28,7 @@ Currently supported:
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'cloudsql_ruby_connector'
+gem 'cloud_sql_ruby_connector'
 ```
 
 And then execute:
@@ -40,7 +40,7 @@ bundle install
 Or install it yourself as:
 
 ```sh
-gem install cloudsql_ruby_connector
+gem install cloud_sql_ruby_connector
 ```
 
 ## Prerequisites
@@ -62,10 +62,10 @@ This library uses the Application Default Credentials (ADC) strategy for resolvi
 ### Basic Usage with PostgreSQL
 
 ```ruby
-require 'cloudsql_ruby_connector'
+require 'cloud_sql_ruby_connector'
 require 'pg'
 
-connector = CloudsqlRubyConnector::Connector.new("my-project:us-central1:my-instance")
+connector = CloudSQLRubyConnector::PostgreSQL::Connector.new("my-project:us-central1:my-instance")
 conn = connector.connect(
   user: "my-user",
   password: "my-password",
@@ -85,13 +85,13 @@ The connector supports `:public` (default), `:private`, and `:psc` IP address ty
 
 ```ruby
 # Using Private IP
-connector = CloudsqlRubyConnector::Connector.new(
+connector = CloudSQLRubyConnector::PostgreSQL::Connector.new(
   "my-project:us-central1:my-instance",
   ip_type: :private
 )
 
 # Using Private Service Connect (PSC)
-connector = CloudsqlRubyConnector::Connector.new(
+connector = CloudSQLRubyConnector::PostgreSQL::Connector.new(
   "my-project:us-central1:my-instance",
   ip_type: :psc
 )
@@ -104,7 +104,7 @@ connector = CloudsqlRubyConnector::Connector.new(
 For IAM database authentication, configure your Cloud SQL instance to allow IAM authentication and add an IAM database user:
 
 ```ruby
-connector = CloudsqlRubyConnector::Connector.new(
+connector = CloudSQLRubyConnector::PostgreSQL::Connector.new(
   "my-project:us-central1:my-instance",
   ip_type: :private,
   auth_type: :iam
@@ -123,10 +123,10 @@ conn = connector.connect(
 Create an initializer at `config/initializers/cloud_sql.rb`:
 
 ```ruby
-require 'cloudsql_ruby_connector'
-require 'cloudsql_ruby_connector/rails'
+require 'cloud_sql_ruby_connector'
+require 'cloud_sql_ruby_connector/rails'
 
-CloudsqlRubyConnector::Rails.setup!(
+CloudSQLRubyConnector::Rails.setup!(
   instance: ENV['CLOUD_SQL_INSTANCE'],  # e.g., "my-project:us-central1:my-instance"
   ip_type: :private,
   auth_type: :iam
@@ -137,7 +137,7 @@ Then in `config/database.yml`:
 
 ```yaml
 production:
-  adapter: cloudsql_postgresql
+  adapter: cloud_sql_postgresql
   database: my_database
   username: my-sa@my-project.iam.gserviceaccount.com
   pool: 5
@@ -146,7 +146,7 @@ production:
 
 ## API Reference
 
-### CloudsqlRubyConnector::Connector
+### CloudSQLRubyConnector::PostgreSQL::Connector
 
 #### `#initialize(instance_connection_name, **options)`
 

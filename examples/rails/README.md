@@ -1,13 +1,13 @@
 # Rails Integration Example
 
-This example shows how to use the Cloud SQL Ruby Connector with Ruby on Rails.
+This example shows how to use the Cloud SQL Ruby Connector (`CloudSQLRubyConnector::PostgreSQL::Connector`) with Ruby on Rails.
 
 ## Setup
 
 ### 1. Add to Gemfile
 
 ```ruby
-gem 'cloudsql_ruby_connector'
+gem 'cloud_sql_ruby_connector'
 gem 'pg'
 ```
 
@@ -16,10 +16,10 @@ gem 'pg'
 Create `config/initializers/cloud_sql.rb`:
 
 ```ruby
-require 'cloudsql_ruby_connector'
-require 'cloudsql_ruby_connector/rails'
+require 'cloud_sql_ruby_connector'
+require 'cloud_sql_ruby_connector/rails'
 
-CloudsqlRubyConnector::Rails.setup!(
+CloudSQLRubyConnector::Rails.setup!(
   instance: ENV['CLOUD_SQL_INSTANCE'],
   ip_type: ENV.fetch('CLOUD_SQL_IP_TYPE', 'PUBLIC'),
   auth_type: ENV.fetch('CLOUD_SQL_AUTH_TYPE', 'PASSWORD')
@@ -30,7 +30,7 @@ CloudsqlRubyConnector::Rails.setup!(
 
 ```yaml
 production:
-  adapter: cloudsql_postgresql
+  adapter: cloud_sql_postgresql
   database: <%= ENV['DB_NAME'] %>
   username: <%= ENV['DB_USER'] %>
   password: <%= ENV['DB_PASS'] %>
@@ -61,8 +61,8 @@ export DB_USER=service-account@project.iam.gserviceaccount.com
 The initializer becomes:
 
 ```ruby
-CloudsqlRubyConnector::Rails.setup!(
+CloudSQLRubyConnector::Rails.setup!(
   instance: ENV['CLOUD_SQL_INSTANCE'],
-  auth_type: CloudsqlRubyConnector::AuthTypes::IAM
+  auth_type: :iam
 )
 ```
