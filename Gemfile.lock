@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cloud_sql_ruby_connector (0.1.0)
+    cloud_sql_ruby_connector (1.0.0)
       base64 (~> 0.2)
 
 GEM

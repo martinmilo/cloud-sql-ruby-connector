@@ -7,15 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 2026-01-17
+## [1.0.0] - 2026-01-17
 
 ### Added
 
-- Initial release with `CloudSQLRubyConnector::PostgreSQL::Connector`
+- Initial public release with `CloudSQLRubyConnector::PostgreSQL::Connector`
 - Support for PostgreSQL connections via Cloud SQL
 - Support for PUBLIC, PRIVATE, and PSC IP address types
-- Support for PASSWORD (built-in) and IAM authentication
-- Automatic certificate refresh before expiration
-- Service account, user credentials, and metadata server authentication
-- Thread-safe connection handling with SSL proxy
+- Support for PASSWORD (built-in) and IAM database authentication
+- Automatic ephemeral certificate management with refresh before expiration
+- Multiple credential sources: service account, user credentials, and GCE/Cloud Run metadata server
+- Thread-safe connection handling with TLS 1.3 SSL proxy
 - Rails integration with custom `cloud_sql_postgresql` adapter
+- Input validation for credentials and connection parameters

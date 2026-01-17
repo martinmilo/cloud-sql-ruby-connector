@@ -16,7 +16,6 @@ gem 'pg'
 Create `config/initializers/cloud_sql.rb`:
 
 ```ruby
-require 'cloud_sql_ruby_connector'
 require 'cloud_sql_ruby_connector/rails'
 
 CloudSQLRubyConnector::Rails.setup!(

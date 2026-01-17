@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/cloud_sql_ruby_connector.svg)](https://badge.fury.io/rb/cloud_sql_ruby_connector)
 
-An unofficial Ruby connector for Google Cloud SQL that provides secure, IAM-based authentication without requiring the Cloud SQL Auth Proxy.
+An unofficial Ruby connector for Google Cloud SQL that provides secure connections without requiring the Cloud SQL Auth Proxy.
 
 > **⚠️ Unofficial Library:** This is a community-maintained Ruby implementation, not an official Google product. For official connectors, see:
 > - [cloud-sql-nodejs-connector](https://github.com/GoogleCloudPlatform/cloud-sql-nodejs-connector) (Node.js)
@@ -11,10 +11,11 @@ An unofficial Ruby connector for Google Cloud SQL that provides secure, IAM-base
 
 ## Features
 
-- **IAM Authorization:** Uses IAM permissions to control who/what can connect to your Cloud SQL instances
-- **Improved Security:** Uses robust, updated TLS 1.3 encryption and identity verification between the client connector and the server-side proxy, independent of the database protocol
-- **Convenience:** Removes the requirement to use and distribute SSL certificates, as well as manage firewalls or source/destination IP addresses
-- **IAM DB Authentication:** Supports Cloud SQL's automatic IAM DB authentication feature
+- **Secure Connections:** TLS 1.3 encryption with automatic certificate management
+- **Multiple Auth Methods:** Supports both built-in database authentication (username/password) and IAM database authentication
+- **Flexible Networking:** Connect via public IP, private IP, or Private Service Connect (PSC)
+- **No Proxy Required:** Direct secure connections without running Cloud SQL Auth Proxy as a separate process
+- **Automatic Credentials:** On GCE/Cloud Run, uses the metadata server automatically - no credential files needed
 - **No External Dependencies:** Uses only Ruby's built-in libraries (openssl, net/http, json, socket)
 
 ## Supported Databases
@@ -46,16 +47,20 @@ gem install cloud_sql_ruby_connector
 ## Prerequisites
 
 - Ruby >= 3.3
-- IAM principal (user, service account, etc.) with the [Cloud SQL Client](https://cloud.google.com/sql/docs/mysql/roles-and-permissions) role
 - [Cloud SQL Admin API](https://console.cloud.google.com/apis/api/sqladmin.googleapis.com) enabled in your Google Cloud Project
+- The calling identity must have the [Cloud SQL Client](https://cloud.google.com/sql/docs/mysql/roles-and-permissions) role (or equivalent permissions) to fetch instance metadata and certificates
 
 ## Credentials
 
-This library uses the Application Default Credentials (ADC) strategy for resolving credentials:
+The connector needs Google Cloud credentials to fetch instance metadata and certificates from the Cloud SQL Admin API.
 
-1. `GOOGLE_APPLICATION_CREDENTIALS` environment variable pointing to a service account JSON key file
-2. User credentials from `gcloud auth application-default login` (stored in `~/.config/gcloud/application_default_credentials.json`)
-3. GCE/Cloud Run metadata server (when running on Google Cloud)
+**On GCE, Cloud Run, GKE, or other Google Cloud environments:**
+No configuration needed - the connector automatically uses the metadata server.
+
+**Outside Google Cloud:**
+Use one of these methods:
+1. Set `GOOGLE_APPLICATION_CREDENTIALS` environment variable to a service account JSON key file path
+2. Run `gcloud auth application-default login` to use your user credentials
 
 ## Usage
 
@@ -123,25 +128,32 @@ conn = connector.connect(
 Create an initializer at `config/initializers/cloud_sql.rb`:
 
 ```ruby
-require 'cloud_sql_ruby_connector'
 require 'cloud_sql_ruby_connector/rails'
 
 CloudSQLRubyConnector::Rails.setup!(
   instance: ENV['CLOUD_SQL_INSTANCE'],  # e.g., "my-project:us-central1:my-instance"
-  ip_type: :private,
-  auth_type: :iam
+  ip_type: :private,                     # :public, :private, or :psc
+  auth_type: :iam                        # :password or :iam
 )
 ```
 
 Then in `config/database.yml`:
 
 ```yaml
+# With IAM authentication
 production:
   adapter: cloud_sql_postgresql
   database: my_database
   username: my-sa@my-project.iam.gserviceaccount.com
   pool: 5
-  # Note: password is not needed for IAM auth
+
+# With password authentication
+production:
+  adapter: cloud_sql_postgresql
+  database: my_database
+  username: my_user
+  password: <%= ENV['DB_PASSWORD'] %>
+  pool: 5
 ```
 
 ## API Reference
